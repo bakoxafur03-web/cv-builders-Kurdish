@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV Builder Pro | بیلدەری سیڤی</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Noto+Kufi+Arabic:wght@300;400;600;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@400;600;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #18181f;
+  --border: #252532;
+  --text: #eeeef8;
+  --muted: #6b6b88;
+  --accent: #6ee7b7;
+  --accent2: #34d399;
+  --cv-primary: #1a1a2e;
+  --cv-accent: #6ee7b7;
+  --cv-bg: #ffffff;
+  --cv-text: #1a1a2e;
+  --cv-light: #f4f4f8;
+  --cv-sidebar: #1a1a2e;
+  --cv-sidebar-text: #ffffff;
+  --cv-font: 'DM Sans', sans-serif;
+  --cv-text-color: #222233;
+  --cv-muted-color: #666677;
+  --cv-primary-lighter: #3a3a5e;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body.rtl { font-family: 'Noto Kufi Arabic', sans-serif; direction: rtl; }
+
+/* TOPBAR */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.3px;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-ghost:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #6ee7b7, #34d399);
+  color: #0a0a0f;
+  font-weight: 700;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(110,231,183,0.3); }
+
+.btn-dl {
+  background: linear-gradient(135deg, #60a5fa, #818cf8);
+  color: white;
+  font-weight: 700;
+}
+.btn-dl:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(96,165,250,0.3); }
+
+.lang-toggle {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+.lang-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* MAIN LAYOUT */
+.main {
+  display: grid;
+  grid-template-columns: 370px 1fr;
+  height: calc(100vh - 58px);
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* TABS */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.tab {
+  flex: 1;
+  padding: 13px 4px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab:hover { color: var(--text); }
+
+.tab-content { display: none; padding: 18px; }
+.tab-content.active { display: block; }
+
+/* FORM */
+.section-title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin: 20px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.field { margin-bottom: 12px; }
+
+label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 11px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.2s;
+  outline: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(110,231,183,0.1);
+}
+textarea { resize: vertical; min-height: 65px; line-height: 1.5; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+
+/* ITEMS */
+.items-list { display: flex; flex-direction: column; gap: 9px; }
+.item-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 13px;
+  position: relative;
+}
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.item-title { font-size: 12px; font-weight: 700; color: var(--text); }
+.item-remove {
+  background: rgba(248,113,113,0.12);
+  border: none;
+  color: #f87171;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.item-remove:hover { background: rgba(248,113,113,0.25); }
+
+.add-btn {
+  width: 100%;
+  padding: 9px;
+  background: var(--surface2);
+  border: 1px dashed var(--border);
+  color: var(--muted);
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  transition: all 0.2s;
+  margin-top: 7px;
+}
+.add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* PHOTO UPLOAD */
+.photo-upload-area {
+  width: 100%;
+  height: 130px;
+  background: var(--surface2);
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.photo-upload-area:hover { border-color: var(--accent); }
+.photo-upload-area img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.photo-upload-area .upload-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.photo-upload-area:hover .upload-overlay { opacity: 1; }
+.photo-upload-area.has-photo .upload-text { display: none; }
+#photo-input { display: none; }
+
+/* TEMPLATES GRID */
+.templates-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.template-card {
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s;
+  aspect-ratio: 0.7;
+  position: relative;
+}
+.template-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.template-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(110,231,183,0.2); }
+.template-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+  padding: 20px 8px 7px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Template Previews */
+.tpl-classic { background: #fff; }
+.tpl-classic .th { height: 25%; background: #1a1a2e; }
+.tpl-classic .tb { height: 75%; padding: 8px; }
+.tpl-classic .tl { height: 5px; background: #6ee7b7; margin-bottom: 4px; border-radius: 2px; width: 60%; }
+.tpl-classic .tll { height: 3px; background: #eee; margin-bottom: 2px; border-radius: 2px; }
+
+.tpl-sidebar { background: #fff; display: flex !important; flex-direction: row !important; }
+.tpl-sidebar .ts { width: 35%; background: #1a1a2e; height: 100%; }
+.tpl-sidebar .tm { flex: 1; padding: 6px; }
+.tpl-sidebar .tl { height: 4px; background: #6ee7b7; margin-bottom: 3px; border-radius: 2px; }
+.tpl-sidebar .tll { height: 2px; background: #eee; margin-bottom: 2px; border-radius: 2px; }
+
+/* FIXED: removed color() function from modern template preview - use simple bg instead */
+.tpl-modern { background: #1a1a2e; }
+.tpl-modern .th { padding: 10px; }
+.tpl-modern .tc { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 6px; border: 2px solid rgba(110,231,183,0.6); }
+.tpl-modern .tb { background: white; flex: 1; padding: 6px; }
+.tpl-modern .tl { height: 4px; background: #6ee7b7; margin-bottom: 3px; border-radius: 2px; }
+.tpl-modern .tll { height: 2px; background: #eee; margin-bottom: 2px; border-radius: 2px; }
+
+.tpl-minimal { background: #fff; border-left: 5px solid #000 !important; }
+.tpl-minimal .th { height: 20%; padding: 8px; display: flex; align-items: center; gap: 4px; }
+.tpl-minimal .tc { width: 28px; height: 28px; background: #000; border-radius: 50%; }
+.tpl-minimal .tb { flex: 1; padding: 6px; }
+.tpl-minimal .tl { height: 4px; background: #000; margin-bottom: 3px; border-radius: 2px; width: 40%; }
+.tpl-minimal .tll { height: 2px; background: #eee; margin-bottom: 2px; border-radius: 2px; }
+
+.tpl-dark { background: #1a1a2e; }
+.tpl-dark .th { height: 28%; background: #6ee7b7; padding: 8px; }
+.tpl-dark .tb { flex: 1; padding: 6px; }
+.tpl-dark .tl { height: 4px; background: #6ee7b7; margin-bottom: 3px; border-radius: 2px; }
+.tpl-dark .tll { height: 2px; background: #2a2a3a; margin-bottom: 2px; border-radius: 2px; }
+
+.tpl-elegant { background: #fafafa; }
+.tpl-elegant .tbar { height: 5px; background: #1a1a2e; }
+.tpl-elegant .th { height: 22%; padding: 6px; background: #fff; border-bottom: 1px solid #eee; }
+.tpl-elegant .tb { padding: 6px; }
+.tpl-elegant .tl { height: 4px; background: #1a1a2e; margin-bottom: 3px; border-radius: 2px; width: 50%; }
+.tpl-elegant .tll { height: 2px; background: #eee; margin-bottom: 2px; border-radius: 2px; }
+
+/* COLORS */
+.color-presets { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+.color-preset {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+.color-preset:hover { transform: scale(1.15); }
+.color-preset.selected { border-color: white; box-shadow: 0 0 0 2px var(--accent); }
+.color-preset.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.color-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.color-label { font-size: 11px; font-weight: 600; color: var(--muted); }
+input[type="color"] {
+  width: 34px; height: 34px;
+  border: 2px solid var(--border);
+  border-radius: 7px;
+  cursor: pointer;
+  background: none;
+  padding: 2px;
+}
+
+/* FONT SECTION */
+.font-select-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+.font-option {
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.font-option:hover { border-color: var(--accent); }
+.font-option.selected { border-color: var(--accent); background: rgba(110,231,183,0.08); }
+.font-option .fo-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.font-option .fo-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* TEXT STYLE */
+.text-style-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.style-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+.style-btn:hover { border-color: var(--accent); color: var(--accent); }
+.style-btn.selected { border-color: var(--accent); color: var(--accent); background: rgba(110,231,183,0.08); }
+
+/* PREVIEW */
+.preview-area {
+  background: #13131a;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px;
+}
+
+.cv-wrapper {
+  background: white;
+  width: 794px;
+  min-height: 1123px;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  border-radius: 3px;
+  transform-origin: top center;
+  position: relative;
+}
+
+/* ============================================================
+   CV TEMPLATES
+   ============================================================ */
+
+/* TEMPLATE 1: CLASSIC */
+.cv-classic { background: var(--cv-bg); font-family: var(--cv-font); }
+.cv-classic .cv-header {
+  background: var(--cv-primary);
+  color: white;
+  padding: 36px 46px;
+  position: relative;
+  overflow: hidden;
+}
+.cv-classic .cv-header::before {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 220px; height: 220px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+}
+.cv-classic .cv-header::after {
+  content: '';
+  position: absolute;
+  right: 60px; bottom: -80px;
+  width: 160px; height: 160px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 50%;
+}
+.cv-classic .header-flex { display: flex; align-items: center; gap: 24px; }
+.cv-classic .cv-photo {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  border: 3px solid var(--cv-accent);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.cv-classic .cv-photo-placeholder {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 3px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: rgba(255,255,255,0.6);
+  flex-shrink: 0;
+}
+.cv-classic .cv-name { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 3px; color: white; }
+.cv-classic .cv-role { font-size: 12px; color: var(--cv-accent); font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 14px; }
+.cv-classic .cv-contacts { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: rgba(255,255,255,0.75); }
+.cv-classic .cv-contact-item { display: flex; align-items: center; gap: 6px; }
+.cv-classic .cv-body { display: grid; grid-template-columns: 1fr 290px; min-height: 800px; }
+.cv-classic .cv-main { padding: 32px 38px; }
+.cv-classic .cv-aside { background: var(--cv-light); padding: 32px 26px; border-left: 1px solid #e8e8f0; }
+
+/* TEMPLATE 2: SIDEBAR */
+.cv-sidebar-tpl { display: flex; min-height: 1123px; font-family: var(--cv-font); }
+.cv-sidebar-tpl .cv-side { width: 270px; background: var(--cv-primary); color: white; padding: 36px 24px; flex-shrink: 0; }
+.cv-sidebar-tpl .cv-main-content { flex: 1; padding: 36px 36px; background: var(--cv-bg); }
+.cv-sidebar-tpl .cv-photo {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: 3px solid var(--cv-accent);
+  object-fit: cover;
+  margin: 0 auto 16px;
+  display: block;
+}
+.cv-sidebar-tpl .cv-photo-placeholder {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 3px solid var(--cv-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; color: rgba(255,255,255,0.7);
+  margin: 0 auto 16px;
+}
+.cv-sidebar-tpl .side-name { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 3px; line-height: 1.2; }
+.cv-sidebar-tpl .side-title { font-size: 11px; text-align: center; color: var(--cv-accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 24px; }
+.side-section-title { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 2.5px; color: rgba(255,255,255,0.4); margin: 18px 0 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 5px; }
+.cv-sidebar-tpl .side-contact-item { display: flex; align-items: center; gap: 9px; font-size: 11px; color: rgba(255,255,255,0.8); margin-bottom: 9px; }
+.cv-sidebar-tpl .side-contact-icon { width: 22px; height: 22px; background: rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cv-sidebar-tpl .side-skill-item { margin-bottom: 11px; }
+.cv-sidebar-tpl .side-skill-name { font-size: 11px; margin-bottom: 5px; color: rgba(255,255,255,0.9); }
+.cv-sidebar-tpl .side-skill-dots { display: flex; gap: 4px; }
+.cv-sidebar-tpl .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+.cv-sidebar-tpl .dot.filled { background: var(--cv-accent); }
+.cv-sidebar-tpl .main-name { font-size: 30px; font-weight: 800; color: var(--cv-text-color); letter-spacing: -0.5px; margin-bottom: 3px; }
+.cv-sidebar-tpl .main-title { font-size: 13px; color: var(--cv-accent); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+
+/* TEMPLATE 3: MODERN - FIXED: use solid color instead of color() gradient */
+.cv-modern { font-family: var(--cv-font); background: var(--cv-bg); }
+.cv-modern .cv-header {
+  background: var(--cv-primary);
+  padding: 42px 46px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.cv-modern .cv-photo {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.4);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.cv-modern .cv-photo-placeholder {
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; flex-shrink: 0;
+}
+.cv-modern .header-info .name { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
+.cv-modern .header-info .title { font-size: 13px; opacity: 0.8; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; margin-top: 3px; }
+.cv-modern .header-contacts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.cv-modern .hc { font-size: 12px; opacity: 0.85; display: flex; align-items: center; gap: 5px; }
+.cv-modern .cv-body { display: grid; grid-template-columns: 1fr 268px; min-height: 800px; }
+.cv-modern .cv-main-col { padding: 32px 38px; }
+.cv-modern .cv-side-col { background: #f5f7ff; padding: 32px 24px; border-left: 1px solid #e8eaf6; }
+
+/* TEMPLATE 4: MINIMAL */
+.cv-minimal { font-family: var(--cv-font); background: white; border-left: 7px solid var(--cv-accent); }
+.cv-minimal .cv-header { padding: 44px 44px 26px; display: flex; align-items: center; gap: 22px; }
+.cv-minimal .cv-photo { width: 76px; height: 76px; border-radius: 50%; border: 2px solid var(--cv-accent); object-fit: cover; flex-shrink: 0; }
+.cv-minimal .cv-photo-placeholder { width: 76px; height: 76px; background: var(--cv-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; flex-shrink: 0; }
+.cv-minimal .min-name { font-size: 30px; font-weight: 900; color: #111; letter-spacing: -1px; }
+.cv-minimal .min-title { font-size: 13px; color: var(--cv-accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px; }
+.cv-minimal .cv-body { display: grid; grid-template-columns: 1fr 240px; min-height: 900px; }
+.cv-minimal .cv-main-col { padding: 30px 38px; }
+.cv-minimal .cv-side-col { padding: 30px 26px; border-left: 1px solid #f0f0f5; }
+
+/* TEMPLATE 5: DARK */
+.cv-dark-tpl { font-family: var(--cv-font); background: #141420; color: #e0e0f0; display: flex; flex-direction: column; }
+.cv-dark-tpl .cv-header { background: var(--cv-accent); padding: 36px 46px; display: flex; align-items: center; gap: 24px; }
+.cv-dark-tpl .cv-photo { width: 82px; height: 82px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.5); object-fit: cover; flex-shrink: 0; }
+.cv-dark-tpl .cv-photo-placeholder { width: 82px; height: 82px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+.cv-dark-tpl .dark-name { font-size: 32px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+.cv-dark-tpl .dark-title { font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 3px; }
+.cv-dark-tpl .cv-body { display: grid; grid-template-columns: 1fr 268px; flex: 1; min-height: 900px; }
+.cv-dark-tpl .cv-main-col { padding: 32px 38px; }
+.cv-dark-tpl .cv-side-col { background: #0d0d18; padding: 32px 24px; }
+.cv-dark-tpl .dark-exp-title { font-size: 13px; font-weight: 700; color: #fff; }
+.cv-dark-tpl .dark-exp-company { font-size: 12px; color: var(--cv-accent); font-weight: 600; margin-bottom: 3px; }
+.cv-dark-tpl .dark-exp-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+
+/* TEMPLATE 6: ELEGANT - FIXED: removed color() from gradient */
+.cv-elegant { font-family: var(--cv-font); background: white; }
+.cv-elegant .top-bar { height: 7px; background: var(--cv-primary); }
+.cv-elegant .cv-header { padding: 32px 46px; text-align: center; border-bottom: 1px solid #eee; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.cv-elegant .cv-photo { width: 82px; height: 82px; border-radius: 50%; border: 3px solid var(--cv-accent); object-fit: cover; }
+.cv-elegant .cv-photo-placeholder { width: 82px; height: 82px; border-radius: 50%; background: var(--cv-primary); display: flex; align-items: center; justify-content: center; font-size: 26px; color: white; }
+.cv-elegant .eleg-name { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--cv-primary); letter-spacing: -1px; }
+.cv-elegant .eleg-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--cv-accent); }
+.cv-elegant .eleg-contacts { display: flex; justify-content: center; gap: 18px; font-size: 12px; color: #888; flex-wrap: wrap; margin-top: 4px; }
+.cv-elegant .eleg-contact { display: flex; align-items: center; gap: 5px; }
+.cv-elegant .cv-body { display: grid; grid-template-columns: 1fr 250px; min-height: 900px; }
+.cv-elegant .cv-main-col { padding: 32px 40px; }
+.cv-elegant .cv-side-col { padding: 32px 26px; background: #fafafa; border-left: 1px solid #eee; }
+
+/* SHARED CV ELEMENTS */
+.cv-section { margin-bottom: 26px; }
+.cv-section-title {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 2.5px; color: var(--cv-accent);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cv-section-title::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: 0.25; }
+.modern-section-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2.5px solid var(--cv-accent); color: var(--cv-primary); }
+.min-section-title { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--cv-accent); margin-bottom: 14px; }
+.dark-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--cv-accent); margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 7px; }
+.eleg-section-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--cv-primary); margin-bottom: 14px; padding-bottom: 7px; border-bottom: 2px solid var(--cv-accent); }
+
+.cv-exp-item { margin-bottom: 18px; }
+.cv-exp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px; }
+.cv-exp-title { font-size: 13px; font-weight: 700; color: var(--cv-text-color); }
+.cv-exp-period { font-size: 10px; background: var(--cv-accent); color: var(--cv-primary); padding: 2px 8px; border-radius: 12px; white-space: nowrap; font-weight: 700; }
+.cv-exp-company { font-size: 11px; color: var(--cv-muted-color); margin-bottom: 5px; font-weight: 600; }
+.cv-exp-desc { font-size: 12px; color: var(--cv-muted-color); line-height: 1.65; }
+
+.cv-skill-item { margin-bottom: 10px; }
+.cv-skill-name { font-size: 12px; font-weight: 600; color: var(--cv-text-color); margin-bottom: 5px; display: flex; justify-content: space-between; }
+.cv-skill-bar { height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden; }
+.cv-skill-fill { height: 100%; background: var(--cv-accent); border-radius: 2px; }
+.skill-dots { display: flex; gap: 4px; }
+.skill-dot { width: 9px; height: 9px; border-radius: 50%; background: #e5e7eb; }
+.skill-dot.filled { background: var(--cv-accent); }
+.cv-lang-item { display: flex; justify-content: space-between; margin-bottom: 7px; }
+.cv-lang-name { font-size: 12px; font-weight: 600; color: var(--cv-text-color); }
+.cv-lang-level { font-size: 11px; color: var(--cv-accent); font-weight: 700; }
+.summary-text { font-size: 12px; color: var(--cv-muted-color); line-height: 1.75; margin-bottom: 18px; }
+.summary-text-dark { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.75; margin-bottom: 18px; }
+
+/* RTL */
+.rtl .cv-wrapper * { font-family: 'Noto Kufi Arabic', sans-serif !important; }
+.rtl .cv-wrapper { direction: rtl; }
+.rtl .cv-exp-header { flex-direction: row-reverse; }
+.rtl .cv-section-title::after { order: -1; }
+.rtl .cv-classic .cv-body { direction: rtl; }
+.rtl .cv-sidebar-tpl .cv-side { order: 2; }
+.rtl .cv-sidebar-tpl .cv-main-content { order: 1; }
+.rtl .cv-minimal { border-left: none; border-right: 7px solid var(--cv-accent); }
+
+/* SKILLS */
+.skill-range-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.skill-range-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+.skill-range-val { font-size: 11px; color: var(--muted); width: 18px; text-align: center; }
+.skill-name-input { flex: 1; }
+
+@media print {
+  body { background: white; }
+  .topbar, .sidebar { display: none !important; }
+  .main { display: block; }
+  .preview-area { padding: 0; background: white; }
+  .cv-wrapper { box-shadow: none; width: 100%; }
+}
+
+@keyframes fadeSlide { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.cv-wrapper { animation: fadeSlide 0.35s ease; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">CV Builder Pro</div>
+  <div class="topbar-actions">
+    <button class="lang-toggle" onclick="toggleLang()">🌐 کوردی / English</button>
+    <!-- <button class="btn btn-ghost" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 6,2 18,2 18,9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span data-en="Print" data-ku="چاپکردن">Print</span>
+    </button> -->
+    <button class="btn btn-dl" onclick="downloadAsImage()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span data-en="Download Image" data-ku="داگرتنی وێنە">Download Image</span>
+    </button>
+    <!-- ZOOM CONTROLS -->
+    <div style="display:flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px 6px;">
+      <button onclick="changeZoom(-10)" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:16px;font-weight:700;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:5px;transition:all 0.15s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='none'">−</button>
+      <span id="zoom-label" style="font-size:11px;font-weight:700;color:var(--muted);min-width:36px;text-align:center;">100%</span>
+      <button onclick="changeZoom(10)" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:16px;font-weight:700;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:5px;transition:all 0.15s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='none'">+</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('info')" data-en="Info" data-ku="زانیاری">Info</div>
+      <div class="tab" onclick="switchTab('experience')" data-en="Work" data-ku="کار">Work</div>
+      <div class="tab" onclick="switchTab('education')" data-en="Edu" data-ku="خوێندن">Edu</div>
+      <div class="tab" onclick="switchTab('skills')" data-en="Skills" data-ku="توانا">Skills</div>
+      <div class="tab" onclick="switchTab('design')" data-en="Design" data-ku="دیزاین">Design</div>
+    </div>
+
+    <!-- INFO -->
+    <div class="tab-content active" id="tab-info">
+      <div class="section-title" data-en="Profile Photo" data-ku="وێنەی پرۆفایل">Profile Photo</div>
+      <div class="photo-upload-area" id="photo-area" onclick="document.getElementById('photo-input').click()">
+        <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(event)">
+        <div class="upload-text" style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6b6b88" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+          <span style="font-size:11px;color:var(--muted);font-weight:600" data-en="Click to upload photo" data-ku="کلیک بکە بۆ بارکردنی وێنە">Click to upload photo</span>
+        </div>
+        <div class="upload-overlay">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span style="font-size:11px;color:white;font-weight:600" data-en="Change Photo" data-ku="گۆڕینی وێنە">Change Photo</span>
+        </div>
+      </div>
+      <button onclick="removePhoto()" style="width:100%;margin-top:6px;padding:6px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;font-size:11px;" data-en="Remove Photo" data-ku="لابردنی وێنە">Remove Photo</button>
+
+      <div class="section-title" data-en="Personal Information" data-ku="زانیاری کەسی">Personal Information</div>
+      <div class="field"><label data-en="Full Name" data-ku="ناوی تەواو">Full Name</label><input type="text" id="f-name" placeholder="John Smith" oninput="updateCV()"></div>
+      <div class="field"><label data-en="Job Title" data-ku="پیشە">Job Title</label><input type="text" id="f-title" placeholder="Graphic Designer" oninput="updateCV()"></div>
+      <div class="two-col">
+        <div class="field"><label data-en="Email" data-ku="ئیمەیڵ">Email</label><input type="email" id="f-email" placeholder="you@email.com" oninput="updateCV()"></div>
+        <div class="field"><label data-en="Phone" data-ku="تەلەفۆن">Phone</label><input type="tel" id="f-phone" placeholder="+964 000 000 0000" oninput="updateCV()"></div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label data-en="City" data-ku="شار">City</label><input type="text" id="f-city" placeholder="Sulaymaniyah" oninput="updateCV()"></div>
+        <div class="field"><label data-en="Country" data-ku="وڵات">Country</label><input type="text" id="f-country" placeholder="Iraq" oninput="updateCV()"></div>
+      </div>
+      <div class="field"><label data-en="Website / LinkedIn" data-ku="ماڵپەڕ / لینکدین">Website / LinkedIn</label><input type="text" id="f-website" placeholder="linkedin.com/in/username" oninput="updateCV()"></div>
+      <div class="field"><label data-en="Professional Summary" data-ku="کورتەی پیشەیی">Professional Summary</label><textarea id="f-summary" rows="4" oninput="updateCV()"></textarea></div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="tab-content" id="tab-experience">
+      <div class="section-title" data-en="Work Experience" data-ku="ئەزموونی کار">Work Experience</div>
+      <div class="items-list" id="exp-list"></div>
+      <button class="add-btn" onclick="addExperience()">+ <span data-en="Add Experience" data-ku="زیادکردنی ئەزموون">Add Experience</span></button>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="tab-content" id="tab-education">
+      <div class="section-title" data-en="Education" data-ku="خوێندنگا">Education</div>
+      <div class="items-list" id="edu-list"></div>
+      <button class="add-btn" onclick="addEducation()">+ <span data-en="Add Education" data-ku="زیادکردنی خوێندن">Add Education</span></button>
+      <div class="section-title" data-en="Languages" data-ku="زمانەکان">Languages</div>
+      <div class="items-list" id="lang-list"></div>
+      <button class="add-btn" onclick="addLanguage()">+ <span data-en="Add Language" data-ku="زیادکردنی زمان">Add Language</span></button>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="tab-content" id="tab-skills">
+      <div class="section-title" data-en="Technical Skills" data-ku="توانا تەکنیکییەکان">Technical Skills</div>
+      <div class="items-list" id="skill-list"></div>
+      <button class="add-btn" onclick="addSkill()">+ <span data-en="Add Skill" data-ku="زیادکردنی توانا">Add Skill</span></button>
+      <div class="section-title" data-en="Interests / Hobbies" data-ku="حەزەکان">Interests / Hobbies</div>
+      <div class="field"><textarea id="f-interests" rows="3" placeholder="Photography, Reading, Design..." oninput="updateCV()"></textarea></div>
+    </div>
+
+    <!-- DESIGN -->
+    <div class="tab-content" id="tab-design">
+      <div class="section-title" data-en="Choose Template" data-ku="دیاریکردنی داڕێژە">Choose Template</div>
+      <div class="templates-grid">
+        <div class="template-card selected" onclick="selectTemplate('classic')" id="tpl-classic">
+          <div class="template-preview tpl-classic" style="width:100%;height:100%;display:flex;flex-direction:column;">
+            <div class="th"></div><div class="tb"><div class="tl"></div><div class="tll"></div><div class="tll" style="width:70%"></div><div class="tl" style="margin-top:8px;width:40%"></div><div class="tll"></div><div class="tll" style="width:60%"></div></div>
+          </div>
+          <div class="template-label" data-en="Classic" data-ku="کلاسیک">Classic</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate('sidebar')" id="tpl-sidebar">
+          <div class="template-preview tpl-sidebar" style="width:100%;height:100%;">
+            <div class="ts"></div><div class="tm"><div class="tl"></div><div class="tll"></div><div class="tll" style="width:70%"></div><div class="tl" style="margin-top:6px;width:50%"></div><div class="tll"></div></div>
+          </div>
+          <div class="template-label" data-en="Sidebar" data-ku="لاپەڕ">Sidebar</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate('modern')" id="tpl-modern">
+          <div class="template-preview tpl-modern" style="width:100%;height:100%;display:flex;flex-direction:column;">
+            <div class="th"><div class="tc"></div><div class="tl" style="background:rgba(255,255,255,0.6);width:50%;"></div><div class="tll" style="background:rgba(255,255,255,0.3);width:60%;"></div></div>
+            <div class="tb"><div class="tl"></div><div class="tll"></div><div class="tll" style="width:75%"></div></div>
+          </div>
+          <div class="template-label" data-en="Modern" data-ku="مۆدێرن">Modern</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate('minimal')" id="tpl-minimal">
+          <div class="template-preview tpl-minimal" style="width:100%;height:100%;display:flex;flex-direction:column;">
+            <div class="th"><div class="tc"></div><div><div style="height:5px;background:#000;width:38px;margin-bottom:3px;border-radius:2px;"></div><div style="height:3px;background:#ccc;width:28px;border-radius:2px;"></div></div></div>
+            <div class="tb"><div class="tl"></div><div class="tll"></div><div class="tll" style="width:65%"></div></div>
+          </div>
+          <div class="template-label" data-en="Minimal" data-ku="مینیمال">Minimal</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate('dark')" id="tpl-dark">
+          <div class="template-preview tpl-dark" style="width:100%;height:100%;display:flex;flex-direction:column;">
+            <div class="th"><div style="height:4px;background:rgba(255,255,255,0.8);width:50%;border-radius:2px;margin-bottom:3px;"></div><div style="height:3px;background:rgba(255,255,255,0.4);width:35%;border-radius:2px;"></div></div>
+            <div class="tb"><div class="tl"></div><div class="tll"></div><div class="tll" style="width:60%"></div></div>
+          </div>
+          <div class="template-label" data-en="Dark" data-ku="تاریک">Dark</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate('elegant')" id="tpl-elegant">
+          <div class="template-preview tpl-elegant" style="width:100%;height:100%;display:flex;flex-direction:column;">
+            <div class="tbar"></div>
+            <div class="th"><div style="height:5px;background:#1a1a2e;width:50%;border-radius:2px;margin:0 auto 3px;"></div><div style="height:3px;background:#ccc;width:30%;border-radius:2px;margin:0 auto;"></div></div>
+            <div class="tb"><div class="tl"></div><div class="tll"></div><div class="tll" style="width:70%"></div></div>
+          </div>
+          <div class="template-label" data-en="Elegant" data-ku="شیک">Elegant</div>
+        </div>
+      </div>
+
+      <!-- FONT -->
+      <div class="section-title" data-en="Font Style" data-ku="ستایلی نوسین">Font Style</div>
+      <div class="font-select-row">
+        <div class="font-option selected" onclick="setFont('DM Sans')" data-font="DM Sans">
+          <div class="fo-name" style="font-family:'DM Sans',sans-serif;">Aa</div>
+          <div class="fo-label">DM Sans</div>
+        </div>
+        <div class="font-option" onclick="setFont('Montserrat')" data-font="Montserrat">
+          <div class="fo-name" style="font-family:'Montserrat',sans-serif;">Aa</div>
+          <div class="fo-label">Montserrat</div>
+        </div>
+        <div class="font-option" onclick="setFont('Raleway')" data-font="Raleway">
+          <div class="fo-name" style="font-family:'Raleway',sans-serif;">Aa</div>
+          <div class="fo-label">Raleway</div>
+        </div>
+        <div class="font-option" onclick="setFont('Lato')" data-font="Lato">
+          <div class="fo-name" style="font-family:'Lato',sans-serif;">Aa</div>
+          <div class="fo-label">Lato</div>
+        </div>
+        <div class="font-option" onclick="setFont('Poppins')" data-font="Poppins">
+          <div class="fo-name" style="font-family:'Poppins',sans-serif;">Aa</div>
+          <div class="fo-label">Poppins</div>
+        </div>
+        <div class="font-option" onclick="setFont('Playfair Display')" data-font="Playfair Display">
+          <div class="fo-name" style="font-family:'Playfair Display',serif;">Aa</div>
+          <div class="fo-label">Playfair</div>
+        </div>
+      </div>
+
+      <!-- TEXT COLOR -->
+      <div class="section-title" data-en="Text Color" data-ku="ڕەنگی نوسین">Text Color</div>
+      <div class="color-row">
+        <span class="color-label" data-en="Main Text" data-ku="نوسینی سەرەکی">Main Text</span>
+        <input type="color" id="cv-text-color" value="#222233" oninput="updateTextColors()">
+      </div>
+      <div class="color-row">
+        <span class="color-label" data-en="Muted Text" data-ku="نوسینی کەم ڕەنگ">Muted Text</span>
+        <input type="color" id="cv-muted-color" value="#666677" oninput="updateTextColors()">
+      </div>
+
+      <!-- COLORS -->
+      <div class="section-title" data-en="Color Presets" data-ku="ڕەنگەکان">Color Presets</div>
+      <div class="color-presets" id="color-presets">
+        <div class="color-preset selected" style="background:#1a1a2e;" data-primary="#1a1a2e" data-accent="#6ee7b7" onclick="applyPreset(this)" title="Midnight Teal"></div>
+        <div class="color-preset" style="background:#0f3460;" data-primary="#0f3460" data-accent="#e94560" onclick="applyPreset(this)" title="Navy Red"></div>
+        <div class="color-preset" style="background:#2d6a4f;" data-primary="#2d6a4f" data-accent="#95d5b2" onclick="applyPreset(this)" title="Forest"></div>
+        <div class="color-preset" style="background:#3a0ca3;" data-primary="#3a0ca3" data-accent="#f72585" onclick="applyPreset(this)" title="Electric"></div>
+        <div class="color-preset" style="background:#b5451b;" data-primary="#b5451b" data-accent="#fcd34d" onclick="applyPreset(this)" title="Amber"></div>
+        <div class="color-preset" style="background:#023e8a;" data-primary="#023e8a" data-accent="#48cae4" onclick="applyPreset(this)" title="Ocean"></div>
+        <div class="color-preset" style="background:#5c0099;" data-primary="#5c0099" data-accent="#c084fc" onclick="applyPreset(this)" title="Violet"></div>
+        <div class="color-preset" style="background:#1b4332;" data-primary="#1b4332" data-accent="#74c69d" onclick="applyPreset(this)" title="Emerald"></div>
+        <div class="color-preset" style="background:#7c2d12;" data-primary="#7c2d12" data-accent="#fb923c" onclick="applyPreset(this)" title="Rust"></div>
+        <div class="color-preset" style="background:#1e293b;" data-primary="#1e293b" data-accent="#94a3b8" onclick="applyPreset(this)" title="Slate"></div>
+        <div class="color-preset" style="background:#713f12;" data-primary="#713f12" data-accent="#fbbf24" onclick="applyPreset(this)" title="Gold"></div>
+        <div class="color-preset" style="background:#831843;" data-primary="#831843" data-accent="#f9a8d4" onclick="applyPreset(this)" title="Rose"></div>
+      </div>
+
+      <div class="section-title" data-en="Custom Colors" data-ku="ڕەنگی دیاریکراو">Custom Colors</div>
+      <div class="color-row">
+        <span class="color-label" data-en="Primary Color" data-ku="ڕەنگی سەرەکی">Primary Color</span>
+        <input type="color" id="cv-primary-color" value="#1a1a2e" oninput="updateColors()">
+      </div>
+      <div class="color-row">
+        <span class="color-label" data-en="Accent Color" data-ku="ڕەنگی ئەکسەنت">Accent Color</span>
+        <input type="color" id="cv-accent-color" value="#6ee7b7" oninput="updateColors()">
+      </div>
+      <div class="color-row">
+        <span class="color-label" data-en="Background" data-ku="پاشزەمینە">Background</span>
+        <input type="color" id="cv-bg-color" value="#ffffff" oninput="updateColors()">
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-area">
+    <div class="cv-wrapper" id="cv-output"></div>
+  </div>
+</div>
+
+<!-- html2canvas for image download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+
+<script>
+// ====================================================
+// STATE
+// ====================================================
+let lang = 'en';
+let currentTemplate = 'classic';
+let cvColors = { primary: '#1a1a2e', accent: '#6ee7b7', bg: '#ffffff' };
+let cvTextColors = { main: '#222233', muted: '#666677' };
+let currentFont = 'DM Sans';
+let photoDataURL = null;
+
+let cvData = {
+  name: '', title: '', email: '', phone: '', city: '', country: '', website: '', summary: '', interests: '',
+  experience: [], education: [], languages: [], skills: []
+};
+
+const T = {
+  en: { experience: 'Work Experience', education: 'Education', skills: 'Skills', languages: 'Languages', contact: 'Contact', about: 'About Me', interests: 'Interests', summary: 'Summary', profile: 'Profile', present: 'Present' },
+  ku: { experience: 'ئەزموونی کار', education: 'خوێندنگا', skills: 'توانا', languages: 'زمانەکان', contact: 'پەیوەندی', about: 'دەربارەی من', interests: 'حەزەکان', summary: 'کورتە', profile: 'پڕۆفایل', present: 'ئێستا' }
+};
+
+// SVG Icons
+const ICONS = {
+  email: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22,6-10,7L2,6"/></svg>`,
+  phone: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.14 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 5.99 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/></svg>`,
+  location: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  web: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+  person: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`
+};
+
+const ICON_SM = {
+  email: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22,6-10,7L2,6"/></svg>`,
+  phone: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.14 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 5.99 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/></svg>`,
+  location: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  web: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
+};
+
+function lightenColor(hex, percent) {
+  hex = hex.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const newR = Math.min(255, Math.floor(r + (255 - r) * (percent / 100)));
+  const newG = Math.min(255, Math.floor(g + (255 - g) * (percent / 100)));
+  const newB = Math.min(255, Math.floor(b + (255 - b) * (percent / 100)));
+  return '#' + [newR, newG, newB].map(x => { const h = x.toString(16); return h.length === 1 ? '0' + h : h; }).join('');
+}
+
+// ====================================================
+// PHOTO
+// ====================================================
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    photoDataURL = ev.target.result;
+    const area = document.getElementById('photo-area');
+    let img = area.querySelector('img');
+    if (!img) { img = document.createElement('img'); area.insertBefore(img, area.firstChild); }
+    img.src = photoDataURL;
+    area.classList.add('has-photo');
+    updateCV();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto() {
+  photoDataURL = null;
+  const area = document.getElementById('photo-area');
+  const img = area.querySelector('img');
+  if (img) img.remove();
+  area.classList.remove('has-photo');
+  document.getElementById('photo-input').value = '';
+  updateCV();
+}
+
+function photoEl(size, cls) {
+  if (photoDataURL) return `<img src="${photoDataURL}" class="${cls}" style="width:${size}px;height:${size}px;border-radius:50%;border:3px solid var(--cv-accent);object-fit:cover;flex-shrink:0;">`;
+  const initials = cvData.name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'';
+  return initials
+    ? `<div class="${cls}" style="width:${size}px;height:${size}px;border-radius:50%;background:rgba(255,255,255,0.15);border:3px solid var(--cv-accent);display:flex;align-items:center;justify-content:center;font-size:${Math.round(size*0.3)}px;font-weight:700;color:white;flex-shrink:0;">${initials}</div>`
+    : `<div class="${cls}" style="width:${size}px;height:${size}px;border-radius:50%;background:rgba(255,255,255,0.12);border:3px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:rgba(255,255,255,0.5);">${ICONS.person}</div>`;
+}
+
+function photoElLight(size) {
+  if (photoDataURL) return `<img src="${photoDataURL}" style="width:${size}px;height:${size}px;border-radius:50%;border:3px solid var(--cv-accent);object-fit:cover;flex-shrink:0;">`;
+  const initials = cvData.name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'';
+  return initials
+    ? `<div style="width:${size}px;height:${size}px;border-radius:50%;background:var(--cv-accent);display:flex;align-items:center;justify-content:center;font-size:${Math.round(size*0.3)}px;font-weight:700;color:var(--cv-primary);flex-shrink:0;">${initials}</div>`
+    : `<div style="width:${size}px;height:${size}px;border-radius:50%;background:var(--cv-accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cv-primary);">${ICONS.person}</div>`;
+}
+
+// ====================================================
+// LANG
+// ====================================================
+function toggleLang() {
+  lang = lang === 'en' ? 'ku' : 'en';
+  document.body.classList.toggle('rtl', lang === 'ku');
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.dataset[lang]; });
+  updateCV();
+}
+
+// ====================================================
+// TABS
+// ====================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelector(`.tab[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ====================================================
+// TEMPLATE / FONT / COLOR
+// ====================================================
+function selectTemplate(name) {
+  currentTemplate = name;
+  document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('tpl-' + name).classList.add('selected');
+  updateCV();
+}
+
+function setFont(font) {
+  currentFont = font;
+  document.querySelectorAll('.font-option').forEach(o => {
+    o.classList.toggle('selected', o.dataset.font === font);
+  });
+  document.documentElement.style.setProperty('--cv-font', `'${font}', sans-serif`);
+  updateCV();
+}
+
+function updateColors() {
+  cvColors.primary = document.getElementById('cv-primary-color').value;
+  cvColors.accent = document.getElementById('cv-accent-color').value;
+  cvColors.bg = document.getElementById('cv-bg-color').value;
+  applyColorsToDOM();
+  updateCV();
+}
+
+function updateTextColors() {
+  cvTextColors.main = document.getElementById('cv-text-color').value;
+  cvTextColors.muted = document.getElementById('cv-muted-color').value;
+  document.documentElement.style.setProperty('--cv-text-color', cvTextColors.main);
+  document.documentElement.style.setProperty('--cv-muted-color', cvTextColors.muted);
+  updateCV();
+}
+
+function applyPreset(el) {
+  document.querySelectorAll('.color-preset').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  cvColors.primary = el.dataset.primary;
+  cvColors.accent = el.dataset.accent;
+  document.getElementById('cv-primary-color').value = cvColors.primary;
+  document.getElementById('cv-accent-color').value = cvColors.accent;
+  applyColorsToDOM();
+  updateCV();
+}
+
+function applyColorsToDOM() {
+  document.documentElement.style.setProperty('--cv-primary', cvColors.primary);
+  document.documentElement.style.setProperty('--cv-accent', cvColors.accent);
+  document.documentElement.style.setProperty('--cv-bg', cvColors.bg);
+  const lighterPrimary = lightenColor(cvColors.primary, 30);
+  document.documentElement.style.setProperty('--cv-primary-lighter', lighterPrimary);
+}
+
+// ====================================================
+// DATA
+// ====================================================
+function collectData() {
+  cvData.name = document.getElementById('f-name').value || (lang==='ku' ? 'ناوی تەواو' : 'Your Name');
+  cvData.title = document.getElementById('f-title').value || (lang==='ku' ? 'پیشەت' : 'Your Title');
+  cvData.email = document.getElementById('f-email').value;
+  cvData.phone = document.getElementById('f-phone').value;
+  cvData.city = document.getElementById('f-city').value;
+  cvData.country = document.getElementById('f-country').value;
+  cvData.website = document.getElementById('f-website').value;
+  cvData.summary = document.getElementById('f-summary').value;
+  cvData.interests = document.getElementById('f-interests').value;
+}
+
+// ====================================================
+// ITEMS
+// ====================================================
+let expId=0, eduId=0, langId=0, skillId=0;
+
+function addExperience() {
+  const id = ++expId;
+  cvData.experience.push({ id, company:'', role:'', from:'', to:'', desc:'' });
+  const list = document.getElementById('exp-list');
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.id = 'exp-card-' + id;
+  div.innerHTML = `
+    <div class="item-header"><span class="item-title">${lang==='ku'?'ئەزموون':'Experience'} #${id}</span><button class="item-remove" onclick="removeExp(${id})">×</button></div>
+    <div class="field"><label>${lang==='ku'?'ناوی پیشە':'Job Title'}</label><input type="text" id="exp-role-${id}" placeholder="${lang==='ku'?'گرافیک دیزاینەر':'Graphic Designer'}" oninput="updateExp(${id})"></div>
+    <div class="field"><label>${lang==='ku'?'کۆمپانیا':'Company'}</label><input type="text" id="exp-company-${id}" placeholder="${lang==='ku'?'ناوی کۆمپانیا':'Company Name'}" oninput="updateExp(${id})"></div>
+    <div class="two-col">
+      <div class="field"><label>${lang==='ku'?'سەرەتا':'From'}</label><input type="text" id="exp-from-${id}" placeholder="2020" oninput="updateExp(${id})"></div>
+      <div class="field"><label>${lang==='ku'?'کۆتا':'To'}</label><input type="text" id="exp-to-${id}" placeholder="${lang==='ku'?'ئێستا':'Present'}" oninput="updateExp(${id})"></div>
+    </div>
+    <div class="field"><label>${lang==='ku'?'وەسف':'Description'}</label><textarea id="exp-desc-${id}" oninput="updateExp(${id})"></textarea></div>`;
+  list.appendChild(div);
+  updateCV();
+}
+
+function updateExp(id) {
+  const item = cvData.experience.find(e => e.id === id);
+  if (item) {
+    item.role = document.getElementById('exp-role-'+id)?.value||'';
+    item.company = document.getElementById('exp-company-'+id)?.value||'';
+    item.from = document.getElementById('exp-from-'+id)?.value||'';
+    item.to = document.getElementById('exp-to-'+id)?.value||'';
+    item.desc = document.getElementById('exp-desc-'+id)?.value||'';
+  }
+  updateCV();
+}
+
+function removeExp(id) {
+  cvData.experience = cvData.experience.filter(e => e.id !== id);
+  document.getElementById('exp-card-'+id)?.remove();
+  updateCV();
+}
+
+function addEducation() {
+  const id = ++eduId;
+  cvData.education.push({ id, school:'', degree:'', field:'', from:'', to:'' });
+  const list = document.getElementById('edu-list');
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.id = 'edu-card-' + id;
+  div.innerHTML = `
+    <div class="item-header"><span class="item-title">${lang==='ku'?'خوێندن':'Education'} #${id}</span><button class="item-remove" onclick="removeEdu(${id})">×</button></div>
+    <div class="field"><label>${lang==='ku'?'خوێندنگا':'School'}</label><input type="text" id="edu-school-${id}" placeholder="${lang==='ku'?'ناوی زانکۆ':'University Name'}" oninput="updateEdu(${id})"></div>
+    <div class="two-col">
+      <div class="field"><label>${lang==='ku'?'بڕوانامە':'Degree'}</label><input type="text" id="edu-degree-${id}" placeholder="B.Sc" oninput="updateEdu(${id})"></div>
+      <div class="field"><label>${lang==='ku'?'بوار':'Field'}</label><input type="text" id="edu-field-${id}" placeholder="${lang==='ku'?'کۆمپیوتەر':'Computer Science'}" oninput="updateEdu(${id})"></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label>${lang==='ku'?'سەرەتا':'From'}</label><input type="text" id="edu-from-${id}" placeholder="2016" oninput="updateEdu(${id})"></div>
+      <div class="field"><label>${lang==='ku'?'کۆتا':'To'}</label><input type="text" id="edu-to-${id}" placeholder="2020" oninput="updateEdu(${id})"></div>
+    </div>`;
+  list.appendChild(div);
+  updateCV();
+}
+
+function updateEdu(id) {
+  const item = cvData.education.find(e => e.id === id);
+  if (item) {
+    item.school = document.getElementById('edu-school-'+id)?.value||'';
+    item.degree = document.getElementById('edu-degree-'+id)?.value||'';
+    item.field = document.getElementById('edu-field-'+id)?.value||'';
+    item.from = document.getElementById('edu-from-'+id)?.value||'';
+    item.to = document.getElementById('edu-to-'+id)?.value||'';
+  }
+  updateCV();
+}
+
+function removeEdu(id) {
+  cvData.education = cvData.education.filter(e => e.id !== id);
+  document.getElementById('edu-card-'+id)?.remove();
+  updateCV();
+}
+
+function addLanguage() {
+  const id = ++langId;
+  cvData.languages.push({ id, name:'', level:'B2' });
+  const list = document.getElementById('lang-list');
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.id = 'lang-card-' + id;
+  div.innerHTML = `
+    <div class="item-header"><span class="item-title">${lang==='ku'?'زمان':'Language'} #${id}</span><button class="item-remove" onclick="removeLang(${id})">×</button></div>
+    <div class="two-col">
+      <div class="field"><label>${lang==='ku'?'زمان':'Language'}</label><input type="text" id="lang-name-${id}" placeholder="${lang==='ku'?'کوردی':'English'}" oninput="updateLang(${id})"></div>
+      <div class="field"><label>${lang==='ku'?'ئاست':'Level'}</label>
+        <select id="lang-level-${id}" onchange="updateLang(${id})">
+          <option value="A1">A1 - Beginner</option><option value="A2">A2 - Elementary</option>
+          <option value="B1">B1 - Intermediate</option><option value="B2" selected>B2 - Upper Int.</option>
+          <option value="C1">C1 - Advanced</option><option value="C2">C2 - Mastery</option>
+          <option value="Native">Native</option>
+        </select>
+      </div>
+    </div>`;
+  list.appendChild(div);
+  updateCV();
+}
+
+function updateLang(id) {
+  const item = cvData.languages.find(e => e.id === id);
+  if (item) {
+    item.name = document.getElementById('lang-name-'+id)?.value||'';
+    item.level = document.getElementById('lang-level-'+id)?.value||'';
+  }
+  updateCV();
+}
+
+function removeLang(id) {
+  cvData.languages = cvData.languages.filter(e => e.id !== id);
+  document.getElementById('lang-card-'+id)?.remove();
+  updateCV();
+}
+
+function addSkill() {
+  const id = ++skillId;
+  cvData.skills.push({ id, name:'', level:4 });
+  const list = document.getElementById('skill-list');
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.id = 'skill-card-' + id;
+  div.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="text" class="skill-name-input" id="skill-name-${id}" placeholder="${lang==='ku'?'توانا':'Skill name'}" oninput="updateSkill(${id})" style="flex:1;">
+      <button class="item-remove" onclick="removeSkill(${id})">×</button>
+    </div>
+    <div class="skill-range-row" style="margin-top:7px;">
+      <input type="range" id="skill-level-${id}" min="1" max="5" value="4" oninput="updateSkill(${id});document.getElementById('skill-val-${id}').textContent=this.value">
+      <span class="skill-range-val" id="skill-val-${id}">4</span>
+    </div>`;
+  list.appendChild(div);
+  updateCV();
+}
+
+function updateSkill(id) {
+  const item = cvData.skills.find(e => e.id === id);
+  if (item) {
+    item.name = document.getElementById('skill-name-'+id)?.value||'';
+    item.level = parseInt(document.getElementById('skill-level-'+id)?.value||4);
+  }
+  updateCV();
+}
+
+function removeSkill(id) {
+  cvData.skills = cvData.skills.filter(e => e.id !== id);
+  document.getElementById('skill-card-'+id)?.remove();
+  updateCV();
+}
+
+// ====================================================
+// RENDER HELPERS
+// ====================================================
+function t(key) { return T[lang][key] || T.en[key]; }
+
+function skillDots(level) {
+  let h = '';
+  for (let i=1;i<=5;i++) h += `<span class="skill-dot${i<=level?' filled':''}"></span>`;
+  return `<div class="skill-dots">${h}</div>`;
+}
+function skillBar(level) {
+  return `<div class="cv-skill-bar"><div class="cv-skill-fill" style="width:${level*20}%"></div></div>`;
+}
+
+function contactItems(iconSize='normal') {
+  const ic = iconSize === 'sm' ? ICON_SM : ICONS;
+  let items = [];
+  if (cvData.email) items.push({ icon: ic.email, text: cvData.email });
+  if (cvData.phone) items.push({ icon: ic.phone, text: cvData.phone });
+  if (cvData.city||cvData.country) items.push({ icon: ic.location, text: [cvData.city,cvData.country].filter(Boolean).join(', ') });
+  if (cvData.website) items.push({ icon: ic.web, text: cvData.website });
+  return items;
+}
+
+function expBlock(e, titleClass, companyClass, descClass) {
+  const period = e.from ? `<div class="cv-exp-period">${e.from} – ${e.to||t('present')}</div>` : '';
+  return `<div class="cv-exp-item">
+    <div class="cv-exp-header">
+      <div><div class="${titleClass}">${e.role||''}</div><div class="${companyClass}">${e.company||''}</div></div>
+      ${period}
+    </div>
+    ${e.desc ? `<div class="${descClass}">${e.desc}</div>` : ''}
+  </div>`;
+}
+
+function eduBlock(e, titleClass, companyClass) {
+  const period = e.from ? `<div class="cv-exp-period">${e.from} – ${e.to||''}</div>` : '';
+  return `<div class="cv-exp-item">
+    <div class="cv-exp-header">
+      <div><div class="${titleClass}">${e.degree?(e.degree+(e.field?' – '+e.field:'')):(lang==='ku'?'بڕوانامە':'Degree')}</div><div class="${companyClass}">${e.school||''}</div></div>
+      ${period}
+    </div>
+  </div>`;
+}
+
+// ====================================================
+// TEMPLATES
+// ====================================================
+function renderClassic() {
+  const contacts = contactItems();
+  return `<div class="cv-classic">
+    <div class="cv-header">
+      <div class="header-flex">
+        ${photoEl(88, 'cv-photo')}
+        <div>
+          <div class="cv-name">${cvData.name}</div>
+          <div class="cv-role">${cvData.title}</div>
+          <div class="cv-contacts">${contacts.map(c=>`<span class="cv-contact-item">${c.icon} ${c.text}</span>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="cv-body">
+      <div class="cv-main">
+        ${cvData.summary?`<div class="cv-section"><div class="cv-section-title">${t('profile')}</div><div class="summary-text">${cvData.summary}</div></div>`:''}
+        ${cvData.experience.length?`<div class="cv-section"><div class="cv-section-title">${t('experience')}</div>${cvData.experience.map(e=>expBlock(e,'cv-exp-title','cv-exp-company','cv-exp-desc')).join('')}</div>`:''}
+        ${cvData.education.length?`<div class="cv-section"><div class="cv-section-title">${t('education')}</div>${cvData.education.map(e=>eduBlock(e,'cv-exp-title','cv-exp-company')).join('')}</div>`:''}
+      </div>
+      <div class="cv-aside">
+        ${cvData.skills.length?`<div class="cv-section"><div class="cv-section-title">${t('skills')}</div>${cvData.skills.map(s=>`<div class="cv-skill-item"><div class="cv-skill-name"><span>${s.name}</span><span style="font-size:10px;color:#999">${s.level}/5</span></div>${skillBar(s.level)}</div>`).join('')}</div>`:''}
+        ${cvData.languages.length?`<div class="cv-section"><div class="cv-section-title">${t('languages')}</div>${cvData.languages.map(l=>`<div class="cv-lang-item"><span class="cv-lang-name">${l.name}</span><span class="cv-lang-level">${l.level}</span></div>`).join('')}</div>`:''}
+        ${cvData.interests?`<div class="cv-section"><div class="cv-section-title">${t('interests')}</div><div class="cv-exp-desc">${cvData.interests}</div></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderSidebar() {
+  const contacts = contactItems('sm');
+  return `<div class="cv-sidebar-tpl">
+    <div class="cv-side">
+      ${photoEl(90, 'cv-photo')}
+      <div class="side-name">${cvData.name}</div>
+      <div class="side-title">${cvData.title}</div>
+      <div class="side-section-title">${t('contact')}</div>
+      ${contacts.map(c=>`<div class="side-contact-item"><div class="side-contact-icon" style="color:var(--cv-accent)">${c.icon}</div>${c.text}</div>`).join('')}
+      ${cvData.skills.length?`<div class="side-section-title">${t('skills')}</div>${cvData.skills.map(s=>`<div class="side-skill-item"><div class="side-skill-name">${s.name}</div><div class="side-skill-dots">${[1,2,3,4,5].map(i=>`<div class="dot${i<=s.level?' filled':''}"></div>`).join('')}</div></div>`).join('')}`:''}
+      ${cvData.languages.length?`<div class="side-section-title">${t('languages')}</div>${cvData.languages.map(l=>`<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.8);margin-bottom:6px;"><span>${l.name}</span><span style="color:var(--cv-accent);font-weight:700">${l.level}</span></div>`).join('')}`:''}
+    </div>
+    <div class="cv-main-content">
+      <div class="main-name">${cvData.name}</div>
+      <div class="main-title">${cvData.title}</div>
+      ${cvData.summary?`<div class="cv-section"><div class="cv-section-title">${t('about')}</div><div class="summary-text">${cvData.summary}</div></div>`:''}
+      ${cvData.experience.length?`<div class="cv-section"><div class="cv-section-title">${t('experience')}</div>${cvData.experience.map(e=>expBlock(e,'cv-exp-title','cv-exp-company','cv-exp-desc')).join('')}</div>`:''}
+      ${cvData.education.length?`<div class="cv-section"><div class="cv-section-title">${t('education')}</div>${cvData.education.map(e=>eduBlock(e,'cv-exp-title','cv-exp-company')).join('')}</div>`:''}
+      ${cvData.interests?`<div class="cv-section"><div class="cv-section-title">${t('interests')}</div><div class="summary-text">${cvData.interests}</div></div>`:''}
+    </div>
+  </div>`;
+}
+
+function renderModern() {
+  const contacts = contactItems('sm');
+  return `<div class="cv-modern">
+    <div class="cv-header">
+      ${photoEl(100, 'cv-photo')}
+      <div class="header-info">
+        <div class="name">${cvData.name}</div>
+        <div class="title">${cvData.title}</div>
+        <div class="header-contacts">${contacts.map(c=>`<span class="hc">${c.icon} ${c.text}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="cv-body">
+      <div class="cv-main-col">
+        ${cvData.summary?`<div class="cv-section"><div class="modern-section-title">${t('profile')}</div><div class="summary-text">${cvData.summary}</div></div>`:''}
+        ${cvData.experience.length?`<div class="cv-section"><div class="modern-section-title">${t('experience')}</div>${cvData.experience.map(e=>expBlock(e,'cv-exp-title','cv-exp-company','cv-exp-desc')).join('')}</div>`:''}
+        ${cvData.education.length?`<div class="cv-section"><div class="modern-section-title">${t('education')}</div>${cvData.education.map(e=>eduBlock(e,'cv-exp-title','cv-exp-company')).join('')}</div>`:''}
+      </div>
+      <div class="cv-side-col">
+        ${cvData.skills.length?`<div class="cv-section"><div class="modern-section-title">${t('skills')}</div>${cvData.skills.map(s=>`<div class="cv-skill-item"><div class="cv-skill-name"><span>${s.name}</span></div>${skillDots(s.level)}</div>`).join('')}</div>`:''}
+        ${cvData.languages.length?`<div class="cv-section"><div class="modern-section-title">${t('languages')}</div>${cvData.languages.map(l=>`<div class="cv-lang-item"><span class="cv-lang-name">${l.name}</span><span class="cv-lang-level">${l.level}</span></div>`).join('')}</div>`:''}
+        ${cvData.interests?`<div class="cv-section"><div class="modern-section-title">${t('interests')}</div><div class="cv-exp-desc">${cvData.interests}</div></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderMinimal() {
+  const contacts = contactItems('sm');
+  return `<div class="cv-minimal">
+    <div class="cv-header">
+      ${photoElLight(76)}
+      <div>
+        <div class="min-name">${cvData.name}</div>
+        <div class="min-title">${cvData.title}</div>
+      </div>
+    </div>
+    <div style="background:var(--cv-accent);height:3px;"></div>
+    <div style="padding:12px 44px;background:#f8f8fc;border-bottom:1px solid #eee;display:flex;flex-wrap:wrap;gap:14px;">
+      ${contacts.map(c=>`<span style="font-size:12px;color:#555;display:flex;align-items:center;gap:5px;">${c.icon} ${c.text}</span>`).join('')}
+    </div>
+    <div class="cv-body">
+      <div class="cv-main-col">
+        ${cvData.summary?`<div class="cv-section"><div class="min-section-title">${t('profile')}</div><div class="summary-text">${cvData.summary}</div></div>`:''}
+        ${cvData.experience.length?`<div class="cv-section"><div class="min-section-title">${t('experience')}</div>${cvData.experience.map(e=>expBlock(e,'cv-exp-title','cv-exp-company','cv-exp-desc')).join('')}</div>`:''}
+        ${cvData.education.length?`<div class="cv-section"><div class="min-section-title">${t('education')}</div>${cvData.education.map(e=>eduBlock(e,'cv-exp-title','cv-exp-company')).join('')}</div>`:''}
+      </div>
+      <div class="cv-side-col">
+        ${cvData.skills.length?`<div class="cv-section"><div class="min-section-title">${t('skills')}</div>${cvData.skills.map(s=>`<div class="cv-skill-item"><div class="cv-skill-name"><span>${s.name}</span></div>${skillBar(s.level)}</div>`).join('')}</div>`:''}
+        ${cvData.languages.length?`<div class="cv-section"><div class="min-section-title">${t('languages')}</div>${cvData.languages.map(l=>`<div class="cv-lang-item"><span class="cv-lang-name">${l.name}</span><span class="cv-lang-level">${l.level}</span></div>`).join('')}</div>`:''}
+        ${cvData.interests?`<div class="cv-section"><div class="min-section-title">${t('interests')}</div><div class="cv-exp-desc">${cvData.interests}</div></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDark() {
+  const contacts = contactItems('sm');
+  return `<div class="cv-dark-tpl">
+    <div class="cv-header">
+      ${photoEl(82, 'cv-photo')}
+      <div style="flex:1">
+        <div class="dark-name">${cvData.name}</div>
+        <div class="dark-title">${cvData.title}</div>
+      </div>
+      <div style="text-align:right;">
+        ${contacts.map(c=>`<div style="font-size:11px;color:rgba(255,255,255,0.8);margin-bottom:4px;display:flex;align-items:center;gap:5px;justify-content:flex-end;">${c.icon} ${c.text}</div>`).join('')}
+      </div>
+    </div>
+    <div class="cv-body">
+      <div class="cv-main-col">
+        ${cvData.summary?`<div class="cv-section"><div class="dark-section-title">${t('profile')}</div><div class="summary-text-dark">${cvData.summary}</div></div>`:''}
+        ${cvData.experience.length?`<div class="cv-section"><div class="dark-section-title">${t('experience')}</div>${cvData.experience.map(e=>expBlock(e,'dark-exp-title','dark-exp-company','dark-exp-desc')).join('')}</div>`:''}
+        ${cvData.education.length?`<div class="cv-section"><div class="dark-section-title">${t('education')}</div>${cvData.education.map(e=>eduBlock(e,'dark-exp-title','dark-exp-company')).join('')}</div>`:''}
+      </div>
+      <div class="cv-side-col">
+        ${cvData.skills.length?`<div class="cv-section"><div class="dark-section-title">${t('skills')}</div>${cvData.skills.map(s=>`<div class="cv-skill-item" style="margin-bottom:11px;"><div style="font-size:12px;color:rgba(255,255,255,0.85);margin-bottom:5px;">${s.name}</div><div class="cv-skill-bar" style="background:rgba(255,255,255,0.1)"><div class="cv-skill-fill" style="width:${s.level*20}%"></div></div></div>`).join('')}</div>`:''}
+        ${cvData.languages.length?`<div class="cv-section"><div class="dark-section-title">${t('languages')}</div>${cvData.languages.map(l=>`<div style="display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:7px;"><span>${l.name}</span><span style="color:var(--cv-accent);font-weight:700">${l.level}</span></div>`).join('')}</div>`:''}
+        ${cvData.interests?`<div class="cv-section"><div class="dark-section-title">${t('interests')}</div><div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.7">${cvData.interests}</div></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderElegant() {
+  const contacts = contactItems('sm');
+  const initials = cvData.name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'';
+  const elegPhoto = photoDataURL
+    ? `<img src="${photoDataURL}" style="width:82px;height:82px;border-radius:50%;border:3px solid var(--cv-accent);object-fit:cover;">`
+    : initials
+      ? `<div style="width:82px;height:82px;border-radius:50%;background:var(--cv-primary);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:white;">${initials}</div>`
+      : '';
+  return `<div class="cv-elegant">
+    <div class="top-bar"></div>
+    <div class="cv-header">
+      ${elegPhoto}
+      <div class="eleg-name">${cvData.name}</div>
+      <div class="eleg-title">${cvData.title}</div>
+      <div class="eleg-contacts">${contacts.map(c=>`<span class="eleg-contact" style="color:#888">${c.icon} ${c.text}</span>`).join('')}</div>
+    </div>
+    <div class="cv-body">
+      <div class="cv-main-col">
+        ${cvData.summary?`<div class="cv-section"><div class="eleg-section-title">${t('profile')}</div><div class="summary-text">${cvData.summary}</div></div>`:''}
+        ${cvData.experience.length?`<div class="cv-section"><div class="eleg-section-title">${t('experience')}</div>${cvData.experience.map(e=>expBlock(e,'cv-exp-title','cv-exp-company','cv-exp-desc')).join('')}</div>`:''}
+        ${cvData.education.length?`<div class="cv-section"><div class="eleg-section-title">${t('education')}</div>${cvData.education.map(e=>eduBlock(e,'cv-exp-title','cv-exp-company')).join('')}</div>`:''}
+      </div>
+      <div class="cv-side-col">
+        ${cvData.skills.length?`<div class="cv-section"><div class="eleg-section-title" style="font-size:14px">${t('skills')}</div>${cvData.skills.map(s=>`<div class="cv-skill-item"><div class="cv-skill-name"><span>${s.name}</span></div>${skillBar(s.level)}</div>`).join('')}</div>`:''}
+        ${cvData.languages.length?`<div class="cv-section"><div class="eleg-section-title" style="font-size:14px">${t('languages')}</div>${cvData.languages.map(l=>`<div class="cv-lang-item"><span class="cv-lang-name">${l.name}</span><span class="cv-lang-level">${l.level}</span></div>`).join('')}</div>`:''}
+        ${cvData.interests?`<div class="cv-section"><div class="eleg-section-title" style="font-size:14px">${t('interests')}</div><div class="cv-exp-desc">${cvData.interests}</div></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTemplate(name) {
+  switch(name) {
+    case 'sidebar': return renderSidebar();
+    case 'modern': return renderModern();
+    case 'minimal': return renderMinimal();
+    case 'dark': return renderDark();
+    case 'elegant': return renderElegant();
+    default: return renderClassic();
+  }
+}
+
+function updateCV() {
+  collectData();
+  document.getElementById('cv-output').innerHTML = renderTemplate(currentTemplate);
+}
+
+// ====================================================
+// DOWNLOAD AS IMAGE — FIXED for html2canvas color() error
+// ====================================================
+async function downloadAsImage() {
+  const btn = document.querySelector('.btn-dl');
+  const orig = btn.innerHTML;
+  
+  // گۆڕینی شێوازی دوگمەکە کاتی کارکردن
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Generating...';
+  btn.disabled = true;
+
+  // ئەو بەشەی کە سیڤییەکەی تێدایە (دڵنیابە ID یەکەی cv-output بێت یان cv-preview)
+  const cv = document.getElementById('cv-output') || document.querySelector('.cv-wrapper');
+
+  const options = {
+    quality: 1,
+    pixelRatio: 2, // بۆ ئەوەی کوالێتی وێنەکە زۆر بەرز بێت (HD)
+    backgroundColor: '#ffffff',
+    cacheBust: true,
+  };
+
+  try {
+    // بەکارهێنانی htmlToImage لەبری html2canvas بۆ ئەنجامێکی زۆر باشتر
+    const dataUrl = await htmlToImage.toPng(cv, options);
+    
+    const link = document.createElement('a');
+    link.download = 'My-Professional-CV.png';
+    link.href = dataUrl;
+    link.click();
+
+  } catch (error) {
+    console.error('Error generating image:', error);
+    alert('ببوورە، کێشەیەک ڕوویدا لە کاتی دروستکردنی وێنەکە');
+  } finally {
+    // گەڕانەوەی دوگمەکە بۆ دۆخی ئاسایی
+    btn.innerHTML = orig;
+    btn.disabled = false;
+  }
+}
+
+// زیادکردنی ئەنیمەیشن بۆ ئایکۆنی لۆدینگ (ئارەزوومەندانە)
+const style = document.createElement('style');
+style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+document.head.append(style);
+
+// ====================================================
+// INIT
+// ====================================================
+function init() {
+  applyColorsToDOM();
+  document.documentElement.style.setProperty('--cv-font', `'${currentFont}', sans-serif`);
+  document.documentElement.style.setProperty('--cv-text-color', cvTextColors.main);
+  document.documentElement.style.setProperty('--cv-muted-color', cvTextColors.muted);
+
+  addExperience();
+  document.getElementById('exp-role-1').value = 'Graphic Designer';
+  document.getElementById('exp-company-1').value = 'Creative Studio';
+  document.getElementById('exp-from-1').value = '2022';
+  document.getElementById('exp-desc-1').value = 'Designed visual content for various clients across print and digital media.';
+  cvData.experience[0].role='Graphic Designer'; cvData.experience[0].company='Creative Studio';
+  cvData.experience[0].from='2022'; cvData.experience[0].desc=document.getElementById('exp-desc-1').value;
+
+  addSkill();
+  document.getElementById('skill-name-1').value='Illustrator';
+  document.getElementById('skill-level-1').value=5;
+  document.getElementById('skill-val-1').textContent=5;
+  cvData.skills[0].name='Illustrator'; cvData.skills[0].level=5;
+
+  addLanguage();
+  document.getElementById('lang-name-1').value='Kurdish';
+  document.getElementById('lang-level-1').value='Native';
+  cvData.languages[0].name='Kurdish'; cvData.languages[0].level='Native';
+
+  document.getElementById('f-name').value='Ahmed Mohammed';
+  document.getElementById('f-title').value='Graphic Designer';
+  document.getElementById('f-email').value='ahmed@email.com';
+  document.getElementById('f-phone').value='+964 000 000 0000';
+  document.getElementById('f-city').value='Sulaymaniyah';
+  document.getElementById('f-country').value='Iraq';
+  document.getElementById('f-summary').value='Creative graphic designer with 5+ years of experience in brand identity, UI/UX and digital media production.';
+
+  updateCV();
+}
+
+init();
+
+// ====================================================
+// ZOOM
+// ====================================================
+let zoomLevel = 100;
+
+function changeZoom(delta) {
+  zoomLevel = Math.min(200, Math.max(30, zoomLevel + delta));
+  const wrapper = document.getElementById('cv-output');
+  wrapper.style.transform = 'scale(' + (zoomLevel / 100) + ')';
+  wrapper.style.transformOrigin = 'top center';
+  wrapper.style.marginBottom = zoomLevel < 100 ? ((zoomLevel - 100) * 11.23) + 'px' : '0';
+  document.getElementById('zoom-label').textContent = zoomLevel + '%';
+}
+
+</script>
+</body>
+</html>
