@@ -1230,6 +1230,26 @@ const T = {
   ku: { experience: 'ئەزموونی کار', education: 'خوێندنگا', skills: 'توانا', languages: 'زمانەکان', contact: 'پەیوەندی', about: 'دەربارەی من', interests: 'حەزەکان', summary: 'کورتە', profile: 'پڕۆفایل', present: 'ئێستا' }
 };
 
+// Language-proficiency level labels, keyed by CV content language so that
+// switching the CV between Kurdish and English also switches these labels.
+// Index position is shared between both arrays (0 = lowest, 8 = native).
+const LEVELS = {
+  ku: ['سەرەتایی','بنەڕەتی','پێش ناوەندی','ناوەندی','سەرووی ناوەندی','پێشکەوتوو','ڕەوان','شارەزا','زمانی دایک'],
+  en: ['Elementary','Basic','Pre-Intermediate','Intermediate','Upper-Intermediate','Advanced','Fluent','Proficient','Native']
+};
+function levelOptionsHTML(selectedIdx) {
+  const arr = LEVELS[cvLang] || LEVELS.en;
+  return arr.map((lvl, i) => `<option value="${i}"${i===selectedIdx?' selected':''}>${lvl}</option>`).join('');
+}
+function refreshLanguageLevels() {
+  cvData.languages.forEach(item => {
+    const sel = document.getElementById('lang-level-' + item.id);
+    const idx = (item.levelIdx !== undefined) ? item.levelIdx : 4;
+    if (sel) sel.innerHTML = levelOptionsHTML(idx);
+    item.level = (LEVELS[cvLang] || LEVELS.en)[idx];
+  });
+}
+
 // SVG Icons
 const ICONS = {
   email: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22,6-10,7L2,6"/></svg>`,
@@ -1271,6 +1291,7 @@ function setCVLanguage(target) {
     const input = document.getElementById('lang-name-' + first.id);
     if (input) input.value = 'کوردی';
   }
+  refreshLanguageLevels();
   updateCV();
 }
 
@@ -1506,7 +1527,8 @@ function removeEdu(id) {
 
 function addLanguage() {
   const id = ++langId;
-  cvData.languages.push({ id, name:'', level:'سەرووی ناوەندی' });
+  const defaultIdx = 4;
+  cvData.languages.push({ id, name:'', level: (LEVELS[cvLang] || LEVELS.en)[defaultIdx], levelIdx: defaultIdx });
   const list = document.getElementById('lang-list');
   const div = document.createElement('div');
   div.className = 'item-card';
@@ -1517,15 +1539,7 @@ function addLanguage() {
       <div class="field"><label>${lang==='ku'?'زمان':'Language'}</label><input type="text" id="lang-name-${id}" placeholder="${lang==='ku'?'کوردی':'English'}" oninput="updateLang(${id})"></div>
       <div class="field"><label>${lang==='ku'?'ئاست':'Level'}</label>
         <select id="lang-level-${id}" onchange="updateLang(${id})">
-          <option value="سەرەتایی">سەرەتایی</option>
-          <option value="بنەڕەتی">بنەڕەتی</option>
-          <option value="پێش ناوەندی">پێش ناوەندی</option>
-          <option value="ناوەندی">ناوەندی</option>
-          <option value="سەرووی ناوەندی" selected>سەرووی ناوەندی</option>
-          <option value="پێشکەوتوو">پێشکەوتوو</option>
-          <option value="ڕەوان">ڕەوان</option>
-          <option value="شارەزا">شارەزا</option>
-          <option value="زمانی دایک">زمانی دایک</option>
+          ${levelOptionsHTML(defaultIdx)}
         </select>
       </div>
     </div>`;
@@ -1537,7 +1551,10 @@ function updateLang(id) {
   const item = cvData.languages.find(e => e.id === id);
   if (item) {
     item.name = document.getElementById('lang-name-'+id)?.value||'';
-    item.level = document.getElementById('lang-level-'+id)?.value||'';
+    const sel = document.getElementById('lang-level-'+id);
+    const idx = sel ? parseInt(sel.value, 10) : 4;
+    item.levelIdx = idx;
+    item.level = (LEVELS[cvLang] || LEVELS.en)[idx];
   }
   updateCV();
 }
@@ -2070,8 +2087,8 @@ function init() {
 
   addLanguage();
   document.getElementById('lang-name-1').value='Kurdish';
-  document.getElementById('lang-level-1').value='زمانی دایک';
-  cvData.languages[0].name='Kurdish'; cvData.languages[0].level='زمانی دایک';
+  document.getElementById('lang-level-1').value='8';
+  cvData.languages[0].name='Kurdish'; cvData.languages[0].levelIdx=8; cvData.languages[0].level=(LEVELS[cvLang]||LEVELS.en)[8];
 
   document.getElementById('f-name').value='Ahmed Mohammed';
   document.getElementById('f-title').value='Graphic Designer';
